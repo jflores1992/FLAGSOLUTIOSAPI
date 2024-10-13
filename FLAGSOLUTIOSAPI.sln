@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FLAGSOLUTIOSAPI", "FLAGSOLUTIOSAPI\FLAGSOLUTIOSAPI.csproj", "{2576C336-AEB9-469F-9FFA-549FA859A8AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2576C336-AEB9-469F-9FFA-549FA859A8AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2576C336-AEB9-469F-9FFA-549FA859A8AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2576C336-AEB9-469F-9FFA-549FA859A8AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2576C336-AEB9-469F-9FFA-549FA859A8AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3B963533-1B6B-4E89-98AF-D1744C2A2777}
+	EndGlobalSection
+EndGlobal
