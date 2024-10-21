@@ -1,3 +1,6 @@
+using FLAGSOLUTIOSAPI.Clases;
+using FLAGSOLUTIOSAPI.DataAcces;
+using FLAGSOLUTIOSAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -28,10 +31,17 @@ builder.Services.AddAuthentication(options =>
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<MANTENIMIENTODBContext>();
+builder.Services.AddScoped<Conexion>();
+builder.Services.AddScoped<DataRepository>();
+builder.Services.AddDbContext<MANTENIMIENTODBContext>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

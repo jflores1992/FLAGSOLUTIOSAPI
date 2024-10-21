@@ -1,4 +1,6 @@
-﻿using FLAGSOLUTIOSAPI.Models;
+﻿using FLAGSOLUTIOSAPI.Clases;
+using FLAGSOLUTIOSAPI.DataAcces;
+using FLAGSOLUTIOSAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -16,39 +18,40 @@ namespace FLAGSOLUTIOSAPI.Controllers
     {
 
         private readonly IConfiguration _configuration;
+        private readonly DataRepository _dataRepository;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration,DataRepository dataRepository)
         {
             _configuration = configuration;
+            _dataRepository = dataRepository;
         }
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel login)
+        public  async Task<IActionResult> Login([FromBody] LoginModel login)
         {
             var configuredUsername = _configuration["UserCredentials:Username"];
             var configuredPassword = _configuration["UserCredentials:Password"];
-            if (login.Username == configuredUsername && login.Password == configuredPassword)
+             var usuario = await _dataRepository.ObtenerDatosUsuario(login);
+            if(usuario.Id != 0)
             {
-                var token = GenerateJwtToken(configuredUsername);
+              
+                var token =await GenerateJwtToken(usuario);
                 return Ok(new { token });
+            }
+            else
+            {
+                var error = new Error()
+                {
+                    Tipo = "Verificacion de Usuario",
+                    MensajeInterno = "Credenciales Incorrecta"
+                };
+
+                return BadRequest(error);
             }
 
             return Unauthorized();
         }
 
-        // GET: api/<AuthController>
-        [HttpGet]
-        [Authorize]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
-        // GET api/<AuthController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST api/<AuthController>
         [HttpPost]
@@ -56,22 +59,11 @@ namespace FLAGSOLUTIOSAPI.Controllers
         {
         }
 
-        // PUT api/<AuthController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AuthController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-        private string GenerateJwtToken(string username)
+        private async Task<TokenUsuario> GenerateJwtToken(Usuario usuario)
         {
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
+            new Claim(JwtRegisteredClaimNames.Sub, usuario.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
@@ -82,11 +74,24 @@ namespace FLAGSOLUTIOSAPI.Controllers
                 issuer: _configuration["Jwt:Issuer"],
                // audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:ExpiresInMinutes"])),
+                expires: DateTime.UtcNow.AddDays(Convert.ToDouble(_configuration["Jwt:ExpiresInDias"])),
                 signingCredentials: creds
             );
+            var tokenExpira = DateTime.UtcNow.AddDays(1);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new TokenUsuario()
+            {
+                Id=Guid.NewGuid(),
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expira = tokenExpira,
+                SucursalId = (int)usuario.SucursalId,
+                UsuarioId = usuario.Id,
+                PerfilId = (int)usuario.PerfilId,
+                EmpresaId = (int)usuario.Sucursal.EmpresaId,
+                Menus = (await _dataRepository.DameListaMenusByUsuarioAll(usuario.Id,usuario.PerfilId??0)).ToList(),
+                NameEmpleado = usuario.Alias
+            };
+            //return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

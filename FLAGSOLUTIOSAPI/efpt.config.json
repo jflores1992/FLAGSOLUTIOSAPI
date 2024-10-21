@@ -1,0 +1,186 @@
+﻿{
+   "CodeGenerationMode": 3,
+   "ContextClassName": "MANTENIMIENTODBContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": true,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "FLAGSOLUTIOSAPI",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[CategoriasMateriales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CentrosEmplazamiento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CiclosPaquetesMantenimiento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ClasesdeOrden]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ComponentesOperacionHojaRuta]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ComponentesOrdenes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DocumentosMedicion]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Empresa]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Equipos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EstatusOrdenes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[EstrategiasMantenimiento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[GruposHojasRuta]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[GruposPlanificacionMantenimiento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[HistorialMantenimientoCreados]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[IndicadoresCriticidad]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Materiales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Menu]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[NotificacionManoObra]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OperacionesHojasRuta]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OperacionesOrdenes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[OrdenesTrabajoEncabezado]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PaqueteMantenimientoOperacionHojaRuta]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PaquetesMantenimiento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Perfil]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Periodos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PresupuestoEquipos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PrioridadesMantenimiento]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PuestosTrabajo]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PuntosMedida]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SeccionesMaquina]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Sucursales]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TiposEquipos]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TiposPuntoMedida]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UnidadesMedidaCaracteristicas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Usuarios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Usuarios_Menu]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": false,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
