@@ -29,7 +29,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 // Add services to the container.
-
+builder.Services.AddCors(options => {options.AddPolicy("AllowSpecificOrigins", policy => { policy.WithOrigins("http://localhost:44398").AllowAnyHeader().AllowAnyMethod(); }); });
 builder.Services.AddControllers();
 
 
@@ -43,7 +43,7 @@ builder.Services.AddScoped<DataRepository>();
 builder.Services.AddDbContext<MANTENIMIENTODBContext>();
 
 var app = builder.Build();
-
+app.UseCors("AllowSpecificOrigins");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
