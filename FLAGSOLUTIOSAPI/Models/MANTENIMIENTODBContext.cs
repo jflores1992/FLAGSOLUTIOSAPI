@@ -91,11 +91,11 @@ public partial class MANTENIMIENTODBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        //Calidad
-        //=> optionsBuilder.UseSqlServer("Data Source=NoybinFlores\\LIFESOLUTIONS;Initial Catalog=MANTENIMIENTODB;Persist Security Info=True;User ID=sa;Password=Admin..2024;Encrypt=True;Trust Server Certificate=True");
-       //Produccion
-      => optionsBuilder.UseSqlServer("Data Source=EC2AMAZ-IL43F9H\\FLAGSOLUTIONS;Initial Catalog=MANTENIMIENTODB;Persist Security Info=True;User ID=sa;Password=Flag0101..;Encrypt=True;Trust Server Certificate=True");
-      
+    //    //  Calidad
+    //    => optionsBuilder.UseSqlServer("Data Source=NoybinFlores\\LIFESOLUTIONS;Initial Catalog=MANTENIMIENTODB;Persist Security Info=True;User ID=sa;Password=Admin..2024;Encrypt=True;Trust Server Certificate=True");
+    //Produccion
+    => optionsBuilder.UseSqlServer("Data Source=EC2AMAZ-IL43F9H\\FLAGSOLUTIONS;Initial Catalog=MANTENIMIENTODB;Persist Security Info=True;User ID=sa;Password=Flag0101..;Encrypt=True;Trust Server Certificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CategoriasMateriale>(entity =>

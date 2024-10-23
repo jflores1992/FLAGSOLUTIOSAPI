@@ -4,7 +4,9 @@ using FLAGSOLUTIOSAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using sitma.Models.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -21,44 +23,174 @@ namespace FLAGSOLUTIOSAPI.Controllers
 
         private readonly IConfiguration _configuration;
         private readonly DataRepository _dataRepository;
-
-        public AuthController(IConfiguration configuration,DataRepository dataRepository)
+        private readonly MANTENIMIENTODBContext _context;
+        public AuthController(IConfiguration configuration,DataRepository dataRepository, MANTENIMIENTODBContext context)
         {
             _configuration = configuration;
             _dataRepository = dataRepository;
+            _context = context;
         }
         [HttpPost("login")]
         public  async Task<IActionResult> Login([FromBody] LoginModel login)
         {
-            var configuredUsername = _configuration["UserCredentials:Username"];
-            var configuredPassword = _configuration["UserCredentials:Password"];
-             var usuario = await _dataRepository.ObtenerDatosUsuario(login);
-            if(usuario.Id != 0)
+            try
             {
-              
-                var token =await GenerateJwtToken(usuario);
-                return Ok(new { token });
-            }
-            else
-            {
-                var error = new Error()
+                var configuredUsername = _configuration["UserCredentials:Username"];
+                var configuredPassword = _configuration["UserCredentials:Password"];
+                var usuario = await _dataRepository.ObtenerDatosUsuario(login);
+                if (usuario.Id != 0)
                 {
-                    Tipo = "Verificacion de Usuario",
-                    MensajeInterno = "Credenciales Incorrecta"
+
+                    var token = await GenerateJwtToken(usuario);
+                    RespuestaHttp respuestaHttp = new RespuestaHttp()
+                    {
+                        Exito = true,
+                        Data = token,
+                        Mensaje = "Exito",
+                        MensajeInterno = ""
+                    };
+
+
+                    return Ok(new { respuestaHttp });
+                }
+                else
+                {
+
+                    RespuestaHttp respuestaHttp = new RespuestaHttp()
+                    {
+                        Exito = false,
+                        Data = usuario,
+                        Mensaje = "Verificacion de Usuario",
+                        MensajeInterno = "Credenciales Incorrecta"
+                    };
+
+                    return BadRequest(respuestaHttp);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error",
+                    MensajeInterno = ex.InnerException?.Message
                 };
 
-                return BadRequest(error);
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
             }
 
-            return Unauthorized();
         }
 
 
 
         // POST api/<AuthController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("Usuario")]
+        [Authorize]
+        public async Task<IActionResult> PostUsuario([FromBody] Usuario usuario)
         {
+
+
+            if (usuario == null)
+            {
+                return BadRequest("El usuario no puede ser nulo.");
+            }
+
+            if (string.IsNullOrEmpty(usuario.Email) || string.IsNullOrEmpty(usuario.Password))
+            {
+                return BadRequest("Email y contraseña son obligatorios.");
+            }
+            try
+            {
+                usuario.FechaCreacion = DateTime.UtcNow;
+                usuario.Activo = true; 
+                usuario.EstadoBorrado = false; 
+
+                await _context.Usuarios.AddAsync(usuario);
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = true,
+                    Data = CreatedAtAction(nameof(PostUsuario), new { id = usuario.Id }, usuario),
+                    Mensaje = "Exito",
+                    MensajeInterno = ""
+                };
+                return Ok(new { respuestaHttp });
+
+
+            }
+            catch (Exception ex)
+            {
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+        // PUT api/<AuthController>/Usuario/{id}
+        [HttpPut("Usuario/{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutUsuario(int id, [FromBody] Usuario usuario)
+        {
+            if (usuario == null)
+            {
+                return BadRequest("El usuario no puede ser nulo.");
+            }
+
+            if (string.IsNullOrEmpty(usuario.Email) || string.IsNullOrEmpty(usuario.Password))
+            {
+                return BadRequest("Email y contraseña son obligatorios.");
+            }
+
+            try
+            {
+                var usuarioExistente = await _context.Usuarios.FindAsync(id);
+                if (usuarioExistente == null)
+                {
+                    return NotFound("Usuario no encontrado.");
+                }
+
+                usuarioExistente.Email = usuario.Email;
+                usuarioExistente.Password = usuario.Password;
+                usuarioExistente.Activo = usuario.Activo;
+                usuarioExistente.FechaFinValidez = usuario.FechaFinValidez;
+                usuarioExistente.ContrasenaTemporal = usuario.ContrasenaTemporal;
+                usuarioExistente.IdUsuarioModificador = usuario.IdUsuarioModificador;
+                usuarioExistente.FechaModificacion = DateTime.UtcNow;
+                usuarioExistente.EstadoBorrado = usuario.EstadoBorrado;
+                _context.Usuarios.Update(usuarioExistente);
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = true,
+                    Data = usuarioExistente,
+                    Mensaje = "Usuario actualizado con éxito",
+                    MensajeInterno = ""
+                };
+                return Ok(respuestaHttp);
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
         }
 
         private async Task<TokenUsuario> GenerateJwtToken(Usuario usuario)
