@@ -121,5 +121,59 @@ namespace FLAGSOLUTIOSAPI.DataAcces
                 throw new Exception("An error ocurred while retrieving data",ex);
             }                
         }
+        public async Task<Usuario> ObtenerIdUsuario(string Username)
+        {
+            Usuario usuario = new Usuario();
+            Sucursale sucursale = new Sucursale();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_conexion.MantenimientoDbConection()))
+                {
+                    await connection.OpenAsync();
+                    string query = "[dbo].[msSP_Select_Usuario_ByUserName]";
+
+                    using (SqlCommand command = new SqlCommand())
+                    {
+                        command.CommandText = query;
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Connection = connection;
+                        command.Parameters.AddWithValue("@username", Username);
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read() && reader.HasRows)
+                            {
+                                sucursale.EmpresaId = (int)reader["EmpresaId"];
+
+                                usuario.Id = (int)reader["Id"];
+                                usuario.Email = reader["Email"] as string;
+                                usuario.Password = reader["Password"] as string;
+                                usuario.PrimerNombre = reader["PrimerNombre"] as string;
+                                usuario.PrimerApellido = reader["PrimerApellido"] as string;
+                                usuario.Activo = (bool)reader["Activo"];
+                                usuario.FechaInicioValidez = (DateTime)reader["FechaInicioValidez"];
+                                usuario.FechaFinValidez = (DateTime)reader["FechaFinValidez"];
+                                usuario.EstadoBorrado = (bool)reader["EstadoBorrado"];
+                                usuario.IdUsuarioCreador = (int)reader["IdUsuarioCreador"];
+                                usuario.FechaCreacion = (DateTime)reader["FechaCreacion"];
+                                usuario.Alias = reader["Alias"] as string;
+                                usuario.PerfilId = (int)reader["PerfilId"];
+                                usuario.SucursalId = (int)reader["SucursalId"];
+                                usuario.ContrasenaTemporal = reader["ContrasenaTemporal"] as string;
+                                usuario.Sucursal = sucursale;
+
+
+                            }
+                            await reader.CloseAsync();
+                        }
+                    }
+                }
+                return usuario;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("An error ocurred while retrieving data", ex);
+            }
+        }
     }
 }

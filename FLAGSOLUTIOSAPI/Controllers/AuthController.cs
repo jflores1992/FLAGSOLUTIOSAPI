@@ -1,6 +1,7 @@
 ﻿using FLAGSOLUTIOSAPI.Clases;
 using FLAGSOLUTIOSAPI.DataAcces;
 using FLAGSOLUTIOSAPI.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -197,6 +198,9 @@ namespace FLAGSOLUTIOSAPI.Controllers
         {
             var claims = new[]
             {
+
+            new Claim(ClaimTypes.Name, usuario.Alias),
+            new Claim(ClaimTypes.Role, usuario.Perfil.Nombre),
             new Claim(JwtRegisteredClaimNames.Sub, usuario.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
@@ -226,6 +230,67 @@ namespace FLAGSOLUTIOSAPI.Controllers
                 NameEmpleado = usuario.Alias
             };
             //return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        [HttpGet("RefrescarToken")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<TokenUsuario>> RefrescarToken()
+        {
+
+            try
+            {
+
+
+                var user = HttpContext.User.Identity.Name;
+
+                var userDb = await _dataRepository.ObtenerIdUsuario(user);
+
+         
+
+                if (userDb.Id != 0)
+                {
+
+                    var token = await GenerateJwtToken(userDb);
+                    RespuestaHttp respuestaHttp = new RespuestaHttp()
+                    {
+                        Exito = true,
+                        Data = token,
+                        Mensaje = "Exito",
+                        MensajeInterno = ""
+                    };
+
+
+                    return Ok(new { respuestaHttp });
+                }
+                else
+                {
+
+                    RespuestaHttp respuestaHttp = new RespuestaHttp()
+                    {
+                        Exito = false,
+                        Data = userDb,
+                        Mensaje = "Verificacion de Usuario",
+                        MensajeInterno = "Usuario No Existe"
+                    };
+
+                    return BadRequest(respuestaHttp);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+           
         }
     }
 }
