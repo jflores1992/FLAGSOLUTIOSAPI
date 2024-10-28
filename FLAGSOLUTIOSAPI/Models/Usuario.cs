@@ -35,8 +35,6 @@ public partial class Usuario
 
     public string Alias { get; set; }
 
-    public int? PerfilId { get; set; }
-
     public int? SucursalId { get; set; }
 
     public string ContrasenaTemporal { get; set; }

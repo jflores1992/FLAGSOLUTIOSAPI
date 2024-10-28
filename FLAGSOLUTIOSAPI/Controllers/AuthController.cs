@@ -224,9 +224,9 @@ namespace FLAGSOLUTIOSAPI.Controllers
                 Expira = tokenExpira,
                 SucursalId = (int)usuario.SucursalId,
                 UsuarioId = usuario.Id,
-                PerfilId = (int)usuario.PerfilId,
+                PerfilId = (int)usuario.Perfil.Id,
                 EmpresaId = (int)usuario.Sucursal.EmpresaId,
-                Menus = (await _dataRepository.DameListaMenusByUsuarioAll(usuario.Id,usuario.PerfilId??0)).ToList(),
+                Menus = (await _dataRepository.DameListaMenusByUsuarioAll(usuario.Id,usuario.Perfil.Id)).ToList(),
                 NameEmpleado = usuario.Alias
             };
             //return new JwtSecurityTokenHandler().WriteToken(token);

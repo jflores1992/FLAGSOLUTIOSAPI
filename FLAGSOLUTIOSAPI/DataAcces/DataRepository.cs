@@ -70,6 +70,7 @@ namespace FLAGSOLUTIOSAPI.DataAcces
         {
             Usuario usuario=new Usuario();
             Sucursale sucursale=new Sucursale();
+            Perfil perfil=new Perfil();
             try
             {
                 using (SqlConnection connection = new SqlConnection(_conexion.MantenimientoDbConection()))
@@ -89,7 +90,8 @@ namespace FLAGSOLUTIOSAPI.DataAcces
                             while (reader.Read() && reader.HasRows)
                             {
                                 sucursale.EmpresaId= (int)reader["EmpresaId"];
-
+                                perfil.Nombre = reader["Perfil"] as string;
+                                perfil.Id = (int)reader["PerfilId"];
                                 usuario.Id = (int)reader["Id"];
                                 usuario.Email = reader["Email"] as string;
                                 usuario.Password = reader["Password"] as string;
@@ -102,10 +104,11 @@ namespace FLAGSOLUTIOSAPI.DataAcces
                                 usuario.IdUsuarioCreador = (int)reader["IdUsuarioCreador"];
                                 usuario.FechaCreacion = (DateTime)reader["FechaCreacion"];
                                 usuario.Alias = reader["Alias"] as string;
-                                usuario.PerfilId = (int)reader["PerfilId"];
                                 usuario.SucursalId = (int)reader["SucursalId"];
                                 usuario.ContrasenaTemporal = reader["ContrasenaTemporal"] as string;
                                 usuario.Sucursal = sucursale;
+                                
+                                usuario.Perfil = perfil;
 
 
                             }
@@ -125,6 +128,8 @@ namespace FLAGSOLUTIOSAPI.DataAcces
         {
             Usuario usuario = new Usuario();
             Sucursale sucursale = new Sucursale();
+
+            Perfil perfil = new Perfil();
             try
             {
                 using (SqlConnection connection = new SqlConnection(_conexion.MantenimientoDbConection()))
@@ -144,6 +149,8 @@ namespace FLAGSOLUTIOSAPI.DataAcces
                             {
                                 sucursale.EmpresaId = (int)reader["EmpresaId"];
 
+                                perfil.Nombre = reader["Perfil"] as string;
+                                perfil.Id = (int)reader["PerfilId"];
                                 usuario.Id = (int)reader["Id"];
                                 usuario.Email = reader["Email"] as string;
                                 usuario.Password = reader["Password"] as string;
@@ -156,10 +163,10 @@ namespace FLAGSOLUTIOSAPI.DataAcces
                                 usuario.IdUsuarioCreador = (int)reader["IdUsuarioCreador"];
                                 usuario.FechaCreacion = (DateTime)reader["FechaCreacion"];
                                 usuario.Alias = reader["Alias"] as string;
-                                usuario.PerfilId = (int)reader["PerfilId"];
                                 usuario.SucursalId = (int)reader["SucursalId"];
                                 usuario.ContrasenaTemporal = reader["ContrasenaTemporal"] as string;
                                 usuario.Sucursal = sucursale;
+                                usuario.Perfil = perfil;
 
 
                             }

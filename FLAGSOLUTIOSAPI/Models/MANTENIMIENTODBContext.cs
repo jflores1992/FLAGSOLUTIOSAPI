@@ -91,10 +91,14 @@ public partial class MANTENIMIENTODBContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-    //    //  Calidad
-    //    => optionsBuilder.UseSqlServer("Data Source=NoybinFlores\\LIFESOLUTIONS;Initial Catalog=MANTENIMIENTODB;Persist Security Info=True;User ID=sa;Password=Admin..2024;Encrypt=True;Trust Server Certificate=True");
+        //    //  Calidad
+        //    => optionsBuilder.UseSqlServer("Data Source=NoybinFlores\\LIFESOLUTIONS;Initial Catalog=MANTENIMIENTODB;Persist Security Info=True;User ID=sa;Password=Admin..2024;Encrypt=True;Trust Server Certificate=True");
+
+        //  Calidad
+        => optionsBuilder.UseSqlServer("Data Source=SQL5111.site4now.net;Initial Catalog=db_a9ce1e_simta;Persist Security Info=True;User ID=db_a9ce1e_simta_admin;Password=flag.2024$$;Encrypt=True;Trust Server Certificate=True");
+
     //Produccion
-    => optionsBuilder.UseSqlServer("Data Source=EC2AMAZ-IL43F9H\\FLAGSOLUTIONS;Initial Catalog=MANTENIMIENTODB;Persist Security Info=True;User ID=sa;Password=Flag0101..;Encrypt=True;Trust Server Certificate=True");
+    //=> optionsBuilder.UseSqlServer("Data Source=EC2AMAZ-IL43F9H\\FLAGSOLUTIONS;Initial Catalog=MANTENIMIENTODB;Persist Security Info=True;User ID=sa;Password=Flag0101..;Encrypt=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -740,6 +744,7 @@ public partial class MANTENIMIENTODBContext : DbContext
                 .HasMaxLength(100);
         });
 
+
         modelBuilder.Entity<Periodo>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Periodos__3214EC072051BA46");
@@ -981,20 +986,29 @@ public partial class MANTENIMIENTODBContext : DbContext
                 .IsRequired()
                 .HasMaxLength(20);
 
-            entity.HasOne(d => d.Perfil).WithMany(p => p.Usuarios)
-                .HasForeignKey(d => d.PerfilId)
-                .HasConstraintName("FK_Usuarios_Perfil");
+            //entity.HasOne(d => d.Perfil).WithMany(p => p.Usuarios)
+            //    .HasForeignKey(d => d.Perfil.Id)
+            //    .HasConstraintName("FK_Usuarios_Perfil");
 
             entity.HasOne(d => d.Sucursal).WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.SucursalId)
                 .HasConstraintName("FK_Usuarios_Sucursales");
         });
 
+        modelBuilder.Entity<Perfil>()
+     .Property(p => p.Id)
+     .ValueGeneratedOnAdd();
+
+
+        modelBuilder.Entity<Menu>()
+     .Property(p => p.Id)
+     .ValueGeneratedOnAdd();
+
         modelBuilder.Entity<UsuariosMenu>(entity =>
         {
             entity.ToTable("Usuarios_Menu");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Creacion)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");

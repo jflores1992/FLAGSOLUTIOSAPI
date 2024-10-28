@@ -2,11 +2,13 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FLAGSOLUTIOSAPI.Models;
 
 public partial class UsuariosMenu
 {
+    [Key]
     public int Id { get; set; }
 
     public int UsuarioId { get; set; }
