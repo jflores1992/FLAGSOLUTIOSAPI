@@ -883,7 +883,7 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<Sucursale>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Creacion)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");

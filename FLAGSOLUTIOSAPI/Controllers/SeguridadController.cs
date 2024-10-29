@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using sitma.Models.Generic;
 
 namespace FLAGSOLUTIOSAPI.Controllers
@@ -18,6 +19,35 @@ namespace FLAGSOLUTIOSAPI.Controllers
         {
             _context = context;
         }
+
+
+        [HttpGet("Perfiles")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Perfil>>> GetPerfiles()
+        {
+            return await _context.Perfils.ToListAsync();
+
+            
+        }
+
+        [HttpGet("Menus")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Menu>>> GetMenus()
+        {
+            return await _context.Menus.ToListAsync();
+
+
+        }
+
+        [HttpGet("Usuarios")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        {
+            return await _context.Usuarios.ToListAsync();
+
+
+        }
+
 
         [HttpGet("Perfiles/{id}")]
         [Authorize]

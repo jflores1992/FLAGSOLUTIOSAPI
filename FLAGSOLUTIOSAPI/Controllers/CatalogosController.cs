@@ -372,42 +372,24 @@ namespace FLAGSOLUTIOSAPI.Controllers
         // GET: api/catalogos/estatusOrdenes
         [HttpGet("EstatusOrdenes")]
         [Authorize]
-        public async Task<IActionResult> GetEstatusOrdenes()
+        public async Task<ActionResult<IEnumerable<EstatusOrdene>>> GetEstatusOrdenes()
         {
-            var estatusOrdenes = await _context.EstatusOrdenes.ToListAsync();
-            return Ok(new RespuestaHttp
-            {
-                Exito = true,
-                Data = estatusOrdenes,
-                Mensaje = "Estatus de órdenes obtenidos con éxito.",
-                MensajeInterno = ""
-            });
+           return await _context.EstatusOrdenes.ToListAsync();
+            
         }
 
         // GET: api/catalogos/estatusOrdenes/{id}
         [HttpGet("EstatusOrdenes/{id}")]
         [Authorize]
-        public async Task<IActionResult> GetEstatusOrden(int id)
+        public async Task<ActionResult<EstatusOrdene>> GetEstatusOrden(int id)
         {
             var estatusOrden = await _context.EstatusOrdenes.FindAsync(id);
             if (estatusOrden == null)
             {
-                return NotFound(new RespuestaHttp
-                {
-                    Exito = false,
-                    Data = null,
-                    Mensaje = "Estatus de orden no encontrado.",
-                    MensajeInterno = ""
-                });
+                return NotFound();
             }
 
-            return Ok(new RespuestaHttp
-            {
-                Exito = true,
-                Data = estatusOrden,
-                Mensaje = "Estatus de orden obtenido con éxito.",
-                MensajeInterno = ""
-            });
+            return estatusOrden;
         }
 
         // POST: api/catalogos/estatusOrdenes
@@ -547,43 +529,24 @@ namespace FLAGSOLUTIOSAPI.Controllers
         // GET: api/catalogos/centrosEmplazamiento
         [HttpGet("CentrosEmplazamiento")]
         [Authorize]
-        public async Task<IActionResult> GetCentrosEmplazamiento()
+        public async Task<ActionResult<IEnumerable<CentrosEmplazamiento>>> GetCentrosEmplazamiento()
         {
-            var centrosEmplazamiento = await _context.CentrosEmplazamientos.ToListAsync();
-            return Ok(new RespuestaHttp
-            {
-                Exito = true,
-                Data = centrosEmplazamiento,
-                Mensaje = "Centros de emplazamiento obtenidos con éxito.",
-                MensajeInterno = ""
-            });
+            return await _context.CentrosEmplazamientos.ToListAsync();
+            
         }
 
 
         // GET: api/catalogos/centrosEmplazamiento/{id}
         [HttpGet("CentrosEmplazamiento/{id}")]
         [Authorize]
-        public async Task<IActionResult> GetCentroEmplazamiento(int id)
+        public async Task<ActionResult<CentrosEmplazamiento>> GetCentroEmplazamiento(int id)
         {
             var centroEmplazamiento = await _context.CentrosEmplazamientos.FindAsync(id);
             if (centroEmplazamiento == null)
             {
-                return NotFound(new RespuestaHttp
-                {
-                    Exito = false,
-                    Data = null,
-                    Mensaje = "Centro de emplazamiento no encontrado.",
-                    MensajeInterno = ""
-                });
+                return NotFound();
             }
-
-            return Ok(new RespuestaHttp
-            {
-                Exito = true,
-                Data = centroEmplazamiento,
-                Mensaje = "Centro de emplazamiento obtenido con éxito.",
-                MensajeInterno = ""
-            });
+            return centroEmplazamiento;
         }
 
 
@@ -719,6 +682,326 @@ namespace FLAGSOLUTIOSAPI.Controllers
         private bool CentroEmplazamientoExists(int id)
         {
             return _context.CentrosEmplazamientos.Any(e => e.Id == id);
+        }
+
+
+
+
+        // GET: api/catalogos/Sucursales
+        [HttpGet("Sucursales")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Sucursale>>> GetSucursales()
+        {
+            return await _context.Sucursales.ToListAsync();
+
+        }
+
+
+        // GET: api/catalogos/Sucursales/{id}
+        [HttpGet("Sucursal/{id}")]
+        [Authorize]
+        public async Task<ActionResult<Sucursale>> GetSucursal(int id)
+        {
+            var Sucursal = await _context.Sucursales.FindAsync(id);
+            if (Sucursal == null)
+            {
+                return NotFound();
+            }
+            return Sucursal;
+        }
+
+
+        // POST: api/catalogos/Sucursal
+        [HttpPost("Sucursal")]
+        [Authorize]
+        public async Task<IActionResult> PostSucursal([FromBody] Sucursale Sucursal)
+        {
+            if (Sucursal == null)
+            {
+                return BadRequest("La Sucursal no puede ser nulo.");
+            }
+
+            try
+            {
+                Sucursal.Activo=true;
+                _context.Sucursales.Add(Sucursal);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetSucursal), new { id = Sucursal.Id }, new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = Sucursal,
+                    Mensaje = "Sucursal creado con éxito.",
+                    MensajeInterno = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error al crear el centro de emplazamiento.",
+                    MensajeInterno = ex.InnerException?.Message
+                });
+            }
+        }
+
+        // PUT: api/catalogos/centrosEmplazamiento/{id}
+        [HttpPut("Sucursal/{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutSucursal(int id, [FromBody] Sucursale Sucursal)
+        {
+            if (id != Sucursal.Id)
+            {
+                return BadRequest("El ID en la URL no coincide con el ID del cuerpo del objeto.");
+            }
+
+            _context.Entry(Sucursal).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = Sucursal,
+                    Mensaje = "Sucursal actualizado con éxito.",
+                    MensajeInterno = ""
+                });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!SucursalExists(id))
+                {
+                    return NotFound("Sucursal no encontrado.");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new RespuestaHttp
+                    {
+                        Exito = false,
+                        Data = new { ErrorMessage = "Error al actualizar la Sucursal." },
+                        Mensaje = "Ocurrió un error de concurrencia.",
+                        MensajeInterno = ""
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error inesperado.",
+                    MensajeInterno = ex.InnerException?.Message
+                });
+            }
+        }
+
+        // DELETE: api/catalogos/centrosEmplazamiento/{id}
+        [HttpDelete("Sucursal/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteSucursal(int id)
+        {
+            try
+            {
+                var Sucursal = await _context.Sucursales.FindAsync(id);
+                if (Sucursal == null)
+                {
+                    return NotFound(new RespuestaHttp
+                    {
+                        Exito = false,
+                        Data = null,
+                        Mensaje = "Sucursal no encontrado.",
+                        MensajeInterno = ""
+                    });
+                }
+
+                _context.Sucursales.Remove(Sucursal);
+                await _context.SaveChangesAsync();
+
+                return Ok(new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = null,
+                    Mensaje = "Sucursal eliminado con éxito.",
+                    MensajeInterno = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error al eliminar el centro de emplazamiento.",
+                    MensajeInterno = ex.InnerException?.Message
+                });
+            }
+        }
+
+        private bool SucursalExists(int id)
+        {
+            return _context.Sucursales.Any(e => e.Id == id);
+        }
+
+        // GET: api/catalogos/Empresas
+        [HttpGet("Empresas")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Empresa>>> GetEmpresas()
+        {
+            return await _context.Empresas.ToListAsync();
+        }
+
+        // GET: api/catalogos/Empresas/{id}
+        [HttpGet("Empresa/{id}")]
+        [Authorize]
+        public async Task<ActionResult<Empresa>> GetEmpresa(int id)
+        {
+            var empresa = await _context.Empresas.FindAsync(id);
+            if (empresa == null)
+            {
+                return NotFound();
+            }
+            return empresa;
+        }
+
+
+        // POST: api/catalogos/Empresa
+        [HttpPost("Empresa")]
+        [Authorize]
+        public async Task<IActionResult> PostEmpresa([FromBody] Empresa empresa)
+        {
+            if (empresa == null)
+            {
+                return BadRequest("La empresa no puede ser nula.");
+            }
+
+            try
+            {
+                empresa.Creacion = DateTime.Now;
+                _context.Empresas.Add(empresa);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetEmpresa), new { id = empresa.Id }, new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = empresa,
+                    Mensaje = "Empresa creada con éxito.",
+                    MensajeInterno = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error al crear la empresa.",
+                    MensajeInterno = ex.InnerException?.Message
+                });
+            }
+        }
+
+
+        // PUT: api/catalogos/Empresa/{id}
+        [HttpPut("Empresa/{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutEmpresa(int id, [FromBody] Empresa empresa)
+        {
+            if (id != empresa.Id)
+            {
+                return BadRequest("El ID en la URL no coincide con el ID del cuerpo del objeto.");
+            }
+
+            _context.Entry(empresa).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok(new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = empresa,
+                    Mensaje = "Empresa actualizada con éxito.",
+                    MensajeInterno = ""
+                });
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EmpresaExists(id))
+                {
+                    return NotFound("Empresa no encontrada.");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, new RespuestaHttp
+                    {
+                        Exito = false,
+                        Data = new { ErrorMessage = "Error al actualizar la empresa." },
+                        Mensaje = "Ocurrió un error de concurrencia.",
+                        MensajeInterno = ""
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error inesperado.",
+                    MensajeInterno = ex.InnerException?.Message
+                });
+            }
+        }
+
+        // DELETE: api/catalogos/Empresa/{id}
+        [HttpDelete("Empresa/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteEmpresa(int id)
+        {
+            try
+            {
+                var empresa = await _context.Empresas.FindAsync(id);
+                if (empresa == null)
+                {
+                    return NotFound(new RespuestaHttp
+                    {
+                        Exito = false,
+                        Data = null,
+                        Mensaje = "Empresa no encontrada.",
+                        MensajeInterno = ""
+                    });
+                }
+
+                _context.Empresas.Remove(empresa);
+                await _context.SaveChangesAsync();
+
+                return Ok(new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = null,
+                    Mensaje = "Empresa eliminada con éxito.",
+                    MensajeInterno = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error al eliminar la empresa.",
+                    MensajeInterno = ex.InnerException?.Message
+                });
+            }
+        }
+
+        private bool EmpresaExists(int id)
+        {
+            return _context.Empresas.Any(e => e.Id == id);
         }
     }
 }
