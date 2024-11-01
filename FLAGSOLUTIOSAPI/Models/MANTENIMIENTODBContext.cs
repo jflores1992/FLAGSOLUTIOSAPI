@@ -69,7 +69,7 @@ public partial class MANTENIMIENTODBContext : DbContext
 
     public virtual DbSet<PresupuestoEquipo> PresupuestoEquipos { get; set; }
 
-    public virtual DbSet<PrioridadesMantenimiento> PrioridadesMantenimientos { get; set; }
+    public virtual DbSet<PrioridadesMantenimientos> PrioridadesMantenimientoss { get; set; }
 
     public virtual DbSet<PuestosTrabajo> PuestosTrabajos { get; set; }
 
@@ -81,7 +81,7 @@ public partial class MANTENIMIENTODBContext : DbContext
 
     public virtual DbSet<TiposEquipo> TiposEquipos { get; set; }
 
-    public virtual DbSet<TiposPuntoMedidum> TiposPuntoMedida { get; set; }
+    public virtual DbSet<TiposPuntoMedida> TiposPuntoMedida { get; set; }
 
     public virtual DbSet<UnidadesMedidaCaracteristica> UnidadesMedidaCaracteristicas { get; set; }
 
@@ -104,6 +104,8 @@ public partial class MANTENIMIENTODBContext : DbContext
     {
         modelBuilder.Entity<CategoriasMateriale>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__Categori__3214EC0791BF429C");
 
             entity.Property(e => e.Activo)
@@ -120,6 +122,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<CentrosEmplazamiento>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__CentrosE__3214EC07BCC54925");
 
             entity.ToTable("CentrosEmplazamiento");
@@ -135,6 +139,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<CiclosPaquetesMantenimiento>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__CiclosPa__3214EC07074B6803");
 
             entity.ToTable("CiclosPaquetesMantenimiento");
@@ -160,6 +166,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<ClasesdeOrden>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__Clasesde__3214EC0718B533FB");
 
             entity.ToTable("ClasesdeOrden");
@@ -255,7 +263,7 @@ public partial class MANTENIMIENTODBContext : DbContext
         {
             entity.ToTable("Empresa");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Correo).HasMaxLength(50);
             entity.Property(e => e.Creacion)
                 .HasDefaultValueSql("(getdate())")
@@ -275,6 +283,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<Equipo>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Activo)
                 .IsRequired()
@@ -361,6 +371,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<EstatusOrdene>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__EstatusO__3214EC0768D9D89B");
 
             entity.Property(e => e.Activo)
@@ -376,6 +388,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<EstrategiasMantenimiento>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__Estrateg__3214EC07F55374D3");
 
             entity.ToTable("EstrategiasMantenimiento");
@@ -416,6 +430,9 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<GruposPlanificacionMantenimiento>(entity =>
         {
+
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__GruposPl__3214EC07E62AD443");
 
             entity.ToTable("GruposPlanificacionMantenimiento");
@@ -464,6 +481,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<IndicadoresCriticidad>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__Indicado__3214EC07855CC426");
 
             entity.ToTable("IndicadoresCriticidad");
@@ -483,6 +502,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<Materiale>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__Material__3214EC07ECB7AE7B");
 
             entity.Property(e => e.Activo)
@@ -655,7 +676,7 @@ public partial class MANTENIMIENTODBContext : DbContext
             entity.HasOne(d => d.IdPrioridadOrdenNavigation).WithMany(p => p.OrdenesTrabajoEncabezados)
                 .HasForeignKey(d => d.IdPrioridadOrden)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_OrdenesTrabajoEncabezado_PrioridadesMantenimiento");
+                .HasConstraintName("FK_OrdenesTrabajoEncabezado_PrioridadesMantenimientos");
 
             entity.HasOne(d => d.IdestatusOrdenNavigation).WithMany(p => p.OrdenesTrabajoEncabezados)
                 .HasForeignKey(d => d.IdestatusOrden)
@@ -718,7 +739,7 @@ public partial class MANTENIMIENTODBContext : DbContext
             entity.HasOne(d => d.IdPrioridadMantoNavigation).WithMany(p => p.PaquetesMantenimientos)
                 .HasForeignKey(d => d.IdPrioridadManto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PaquetesMantenimiento_PrioridadesMantenimiento");
+                .HasConstraintName("FK_PaquetesMantenimiento_PrioridadesMantenimientos");
 
             entity.HasOne(d => d.IdPuntoMedidaNavigation).WithMany(p => p.PaquetesMantenimientos)
                 .HasForeignKey(d => d.IdPuntoMedida)
@@ -735,7 +756,7 @@ public partial class MANTENIMIENTODBContext : DbContext
         {
             entity.ToTable("Perfil");
 
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Creacion)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -791,11 +812,14 @@ public partial class MANTENIMIENTODBContext : DbContext
             //    .HasConstraintName("FK_PresupuestoEquipos_Periodos");
         });
 
-        modelBuilder.Entity<PrioridadesMantenimiento>(entity =>
+        modelBuilder.Entity<PrioridadesMantenimientos>(entity =>
+
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__Priorida__3214EC07BBF669FC");
 
-            entity.ToTable("PrioridadesMantenimiento");
+            entity.ToTable("PrioridadesMantenimientos");
 
             entity.Property(e => e.Activo)
                 .IsRequired()
@@ -813,6 +837,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<PuestosTrabajo>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__PuestosT__3214EC076F556D26");
 
             entity.ToTable("PuestosTrabajo");
@@ -866,6 +892,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<SeccionesMaquina>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__Seccione__3214EC07DCDC2830");
 
             entity.ToTable("SeccionesMaquina");
@@ -899,6 +927,8 @@ public partial class MANTENIMIENTODBContext : DbContext
 
         modelBuilder.Entity<TiposEquipo>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Activo)
                 .IsRequired()
@@ -920,8 +950,10 @@ public partial class MANTENIMIENTODBContext : DbContext
                 .HasColumnName("nombretipo");
         });
 
-        modelBuilder.Entity<TiposPuntoMedidum>(entity =>
+        modelBuilder.Entity<TiposPuntoMedida>(entity =>
         {
+
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.HasKey(e => e.Id).HasName("PK__TiposPun__3214EC0742DF8150");
 
             entity.Property(e => e.Activo)
@@ -941,7 +973,7 @@ public partial class MANTENIMIENTODBContext : DbContext
         modelBuilder.Entity<UnidadesMedidaCaracteristica>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Unidades__3214EC073C8E1245");
-
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
             entity.Property(e => e.Activo)
                 .IsRequired()
                 .HasDefaultValueSql("((1))");

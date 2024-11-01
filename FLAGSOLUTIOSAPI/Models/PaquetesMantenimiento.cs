@@ -49,7 +49,7 @@ public partial class PaquetesMantenimiento
 
     public virtual EstrategiasMantenimiento IdEstrategiaMantenimientoNavigation { get; set; }
 
-    public virtual PrioridadesMantenimiento IdPrioridadMantoNavigation { get; set; }
+    public virtual PrioridadesMantenimientos IdPrioridadMantoNavigation { get; set; }
 
     public virtual PuntosMedidum IdPuntoMedidaNavigation { get; set; }
 

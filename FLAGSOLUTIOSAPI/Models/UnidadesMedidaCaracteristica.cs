@@ -2,11 +2,14 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FLAGSOLUTIOSAPI.Models;
 
 public partial class UnidadesMedidaCaracteristica
 {
+
+    [Key]
     public int Id { get; set; }
 
     public string NombreUm { get; set; }

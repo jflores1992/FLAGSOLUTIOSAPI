@@ -51,7 +51,7 @@ public partial class OrdenesTrabajoEncabezado
 
     public virtual Equipo IdEquipoNavigation { get; set; }
 
-    public virtual PrioridadesMantenimiento IdPrioridadOrdenNavigation { get; set; }
+    public virtual PrioridadesMantenimientos IdPrioridadOrdenNavigation { get; set; }
 
     public virtual EstatusOrdene IdestatusOrdenNavigation { get; set; }
 

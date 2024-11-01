@@ -2,11 +2,13 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FLAGSOLUTIOSAPI.Models;
 
 public partial class PuntosMedidum
 {
+    [Key]
     public int Id { get; set; }
 
     public int IdTipoPuntoMedida { get; set; }
@@ -39,7 +41,7 @@ public partial class PuntosMedidum
 
     public virtual Equipo IdEquipoNavigation { get; set; }
 
-    public virtual TiposPuntoMedidum IdTipoPuntoMedidaNavigation { get; set; }
+    public virtual TiposPuntoMedida IdTipoPuntoMedidaNavigation { get; set; }
 
     public virtual UnidadesMedidaCaracteristica IdUnidadCaracteristicaNavigation { get; set; }
 

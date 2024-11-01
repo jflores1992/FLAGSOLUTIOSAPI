@@ -2,16 +2,21 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FLAGSOLUTIOSAPI.Models;
 
 public partial class IndicadoresCriticidad
 {
+    [Key]
     public int Id { get; set; }
 
     public string NombreIndicadorAbc { get; set; }
 
     public string TextoIndicadorAbc { get; set; }
+    public int IdUsuarioCreador { get; set; }
+
+    public DateTime FechaCreacion { get; set; }
 
     public int? IdUsuarioModificador { get; set; }
 
