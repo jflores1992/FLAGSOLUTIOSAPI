@@ -407,13 +407,17 @@ namespace FLAGSOLUTIOSAPI.Controllers
                 _context.EstatusOrdenes.Add(estatusOrden);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetEstatusOrden), new { id = estatusOrden.Id }, new RespuestaHttp
+                
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
                 {
                     Exito = true,
-                    Data = estatusOrden,
+                    Data = CreatedAtAction(nameof(GetEstatusOrden), new { id = estatusOrden.Id }, estatusOrden),
                     Mensaje = "Estatus de orden creado con éxito.",
                     MensajeInterno = ""
-                });
+                };
+                return Ok(respuestaHttp);
+
             }
             catch (Exception ex)
             {
@@ -562,16 +566,23 @@ namespace FLAGSOLUTIOSAPI.Controllers
 
             try
             {
+                centroEmplazamiento.FechaCreacion = DateTime.UtcNow;
+
+                centroEmplazamiento.Activo = true;
+                centroEmplazamiento.EstadoBorrado = false;
+
                 _context.CentrosEmplazamientos.Add(centroEmplazamiento);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetCentroEmplazamiento), new { id = centroEmplazamiento.Id }, new RespuestaHttp
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
                 {
                     Exito = true,
-                    Data = centroEmplazamiento,
+                    Data = CreatedAtAction(nameof(GetCentroEmplazamiento), new { id = centroEmplazamiento.Id }, centroEmplazamiento),
                     Mensaje = "Centro de emplazamiento creado con éxito.",
                     MensajeInterno = ""
-                });
+                };
+
+                return Ok(respuestaHttp);
             }
             catch (Exception ex)
             {
@@ -727,13 +738,19 @@ namespace FLAGSOLUTIOSAPI.Controllers
                 _context.Sucursales.Add(Sucursal);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetSucursal), new { id = Sucursal.Id }, new RespuestaHttp
+                
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
                 {
                     Exito = true,
-                    Data = Sucursal,
+                    Data = CreatedAtAction(nameof(GetSucursal), new { id = Sucursal.Id }, Sucursal),
                     Mensaje = "Sucursal creado con éxito.",
                     MensajeInterno = ""
-                });
+                };
+
+                return Ok(respuestaHttp);
+
+
             }
             catch (Exception ex)
             {
@@ -884,13 +901,18 @@ namespace FLAGSOLUTIOSAPI.Controllers
                 _context.Empresas.Add(empresa);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction(nameof(GetEmpresa), new { id = empresa.Id }, new RespuestaHttp
+                
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
                 {
                     Exito = true,
-                    Data = empresa,
+                    Data = CreatedAtAction(nameof(GetEmpresa), new { id = empresa.Id }, empresa),
                     Mensaje = "Empresa creada con éxito.",
                     MensajeInterno = ""
-                });
+                };
+
+                return Ok(respuestaHttp);
+
+
             }
             catch (Exception ex)
             {
