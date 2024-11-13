@@ -1,4 +1,5 @@
-﻿using FLAGSOLUTIOSAPI.Models;
+﻿using FLAGSOLUTIOSAPI.DataAcces;
+using FLAGSOLUTIOSAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,11 @@ namespace FLAGSOLUTIOSAPI.Controllers
 
 
         private readonly MANTENIMIENTODBContext _context;
-
-        public SeguridadController(MANTENIMIENTODBContext context)
+        private readonly DataRepository _dataRepository;
+        public SeguridadController(MANTENIMIENTODBContext context, DataRepository dataRepository)
         {
             _context = context;
+            _dataRepository = dataRepository;
         }
 
 
@@ -80,16 +82,19 @@ namespace FLAGSOLUTIOSAPI.Controllers
 
         [HttpGet("UsuariosMenus/{id}")]
         [Authorize]
-        public async Task<ActionResult<UsuariosMenu>> GetUsuariosmenu(int id)
+        public async Task<ActionResult<IEnumerable<Menu>>> GetUsuariosmenu(int id)
         {
-            var menu = await _context.UsuariosMenus.FindAsync(id);
 
-            if (menu == null)
+            List<Menu> usuariosMenus = (await _dataRepository.DameListaMenusByUsuarioAll(id, 0));
+
+       
+
+            if (usuariosMenus == null)
             {
                 return NotFound();
             }
 
-            return menu;
+            return usuariosMenus;
         }
 
 
