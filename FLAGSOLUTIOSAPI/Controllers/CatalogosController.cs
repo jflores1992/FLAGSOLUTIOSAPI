@@ -3113,5 +3113,525 @@ namespace FLAGSOLUTIOSAPI.Controllers
         }
 
 
+        // GET: api/catalogos/claseOrdenes
+        [HttpGet("ClaseOrdenes")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<ClasesdeOrden>>> GetClaseOrdenes()
+        {
+            return await _context.ClasesdeOrdens.ToListAsync();
+        }
+
+        // GET: api/catalogos/claseOrdenes/{id}
+        [HttpGet("ClaseOrdenes/{id}")]
+        [Authorize]
+        public async Task<ActionResult<ClasesdeOrden>> GetClaseOrden(int id)
+        {
+            var claseOrden = await _context.ClasesdeOrdens.FindAsync(id);
+
+            if (claseOrden == null)
+            {
+                return NotFound();
+            }
+
+            return claseOrden;
+        }
+
+        // POST: api/catalogos/postClaseOrdenes
+        [HttpPost("ClaseOrdenes")]
+        [Authorize]
+        public async Task<IActionResult> PostClaseOrden([FromBody] ClasesdeOrden claseOrden)
+        {
+            if (claseOrden == null)
+            {
+                return BadRequest("La clase de orden no puede ser nula.");
+            }
+
+            try
+            {
+                claseOrden.FechaCreacion = DateTime.UtcNow;
+                _context.ClasesdeOrdens.Add(claseOrden);
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = true,
+                    Data = CreatedAtAction(nameof(GetClaseOrden), new { id = claseOrden.Id }, claseOrden),
+                    Mensaje = "Clase de orden creada con éxito",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+        // PUT: api/catalogos/putClaseOrdenes/{id}
+        [HttpPut("ClaseOrdenes/{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutClaseOrden(int id, [FromBody] ClasesdeOrden claseOrden)
+        {
+            if (id != claseOrden.Id)
+            {
+                return BadRequest("El ID en la URL no coincide con el ID del cuerpo del objeto.");
+            }
+
+            claseOrden.FechaModificacion = DateTime.UtcNow;
+            _context.Entry(claseOrden).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = true,
+                    Data = claseOrden,
+                    Mensaje = "Clase de orden actualizada con éxito",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ClaseOrdenExists(id))
+                {
+                    return NotFound("Clase de orden no encontrada.");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new RespuestaHttp
+                        {
+                            Exito = false,
+                            Data = new { ErrorMessage = "Error al actualizar la clase de orden." },
+                            Mensaje = "Ocurrió un error de concurrencia",
+                            MensajeInterno = ""
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error inesperado",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+        private bool ClaseOrdenExists(int id)
+        {
+            return _context.ClasesdeOrdens.Any(e => e.Id == id);
+        }
+
+        // DELETE: api/catalogos/deleteClaseOrdenes/{id}
+        [HttpDelete("ClaseOrdenes/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteClaseOrden(int id)
+        {
+            try
+            {
+                var claseOrden = await _context.ClasesdeOrdens.FindAsync(id);
+                if (claseOrden == null)
+                {
+                    return NotFound(new RespuestaHttp
+                    {
+                        Exito = false,
+                        Data = null,
+                        Mensaje = "Clase de orden no encontrada.",
+                        MensajeInterno = ""
+                    });
+                }
+
+                _context.ClasesdeOrdens.Remove(claseOrden);
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = null,
+                    Mensaje = "Clase de orden eliminada con éxito.",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error al eliminar la clase de orden.",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+        // GET: api/catalogos/gruposHojasRutum
+        [HttpGet("GruposHojasRuta")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<GruposHojasRutum>>> GetGruposHojasRuta()
+        {
+            return await _context.GruposHojasRuta.ToListAsync();
+        }
+
+        // GET: api/catalogos/gruposHojasRutum/{id}
+        [HttpGet("GruposHojasRuta/{id}")]
+        [Authorize]
+        public async Task<ActionResult<GruposHojasRutum>> GetGrupoHojaRuta(int id)
+        {
+            var grupoHojaRutum = await _context.GruposHojasRuta.FindAsync(id);
+
+            if (grupoHojaRutum == null)
+            {
+                return NotFound();
+            }
+
+            return grupoHojaRutum;
+        }
+
+        // POST: api/catalogos/postGruposHojasRutum
+        [HttpPost("GruposHojasRuta")]
+        [Authorize]
+        public async Task<IActionResult> PostGrupoHojaRuta([FromBody] GruposHojasRutum grupoHojaRutum)
+        {
+            if (grupoHojaRutum == null)
+            {
+                return BadRequest("El grupo de hoja Ruta no puede ser nulo.");
+            }
+
+            try
+            {
+                grupoHojaRutum.FechaCreacion = DateTime.UtcNow;
+                _context.GruposHojasRuta.Add(grupoHojaRutum);
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = true,
+                    Data = CreatedAtAction(nameof(GetGrupoHojaRuta), new { id = grupoHojaRutum.Id }, grupoHojaRutum),
+                    Mensaje = "Grupo de hoja Ruta creado con éxito",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+        // PUT: api/catalogos/putGruposHojasRutum/{id}
+        [HttpPut("GruposHojasRuta/{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutGrupoHojaRuta(int id, [FromBody] GruposHojasRutum grupoHojaRutum)
+        {
+            if (id != grupoHojaRutum.Id)
+            {
+                return BadRequest("El ID en la URL no coincide con el ID del cuerpo del objeto.");
+            }
+
+            grupoHojaRutum.FechaModificacion = DateTime.UtcNow;
+            _context.Entry(grupoHojaRutum).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = true,
+                    Data = grupoHojaRutum,
+                    Mensaje = "Grupo de hoja Ruta actualizado con éxito",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!GrupoHojaRutumExists(id))
+                {
+                    return NotFound("Grupo de hoja Ruta no encontrado.");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new RespuestaHttp
+                        {
+                            Exito = false,
+                            Data = new { ErrorMessage = "Error al actualizar el grupo de hoja Ruta." },
+                            Mensaje = "Ocurrió un error de concurrencia",
+                            MensajeInterno = ""
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error inesperado",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+        private bool GrupoHojaRutumExists(int id)
+        {
+            return _context.GruposHojasRuta.Any(e => e.Id == id);
+        }
+
+        // DELETE: api/catalogos/deleteGruposHojasRutum/{id}
+        [HttpDelete("GruposHojasRuta/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteGrupoHojaRutum(int id)
+        {
+            try
+            {
+                var grupoHojaRutum = await _context.GruposHojasRuta.FindAsync(id);
+                if (grupoHojaRutum == null)
+                {
+                    return NotFound(new RespuestaHttp
+                    {
+                        Exito = false,
+                        Data = null,
+                        Mensaje = "Grupo de hoja Ruta no encontrado.",
+                        MensajeInterno = ""
+                    });
+                }
+
+                _context.GruposHojasRuta.Remove(grupoHojaRutum);
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = null,
+                    Mensaje = "Grupo de hoja Ruta eliminado con éxito.",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error al eliminar el grupo de hoja Ruta.",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+
+        // GET: api/catalogos/presupuestosEquipos
+        [HttpGet("PresupuestosEquipos")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<PresupuestoEquipo>>> GetPresupuestosEquipos()
+        {
+            return await _context.PresupuestoEquipos.ToListAsync();
+        }
+
+        // GET: api/catalogos/presupuestosEquipos/{id}
+        [HttpGet("PresupuestosEquipos/{id}")]
+        [Authorize]
+        public async Task<ActionResult<PresupuestoEquipo>> GetPresupuestoEquipo(int id)
+        {
+            var presupuestoEquipo = await _context.PresupuestoEquipos.FindAsync(id);
+
+            if (presupuestoEquipo == null)
+            {
+                return NotFound();
+            }
+
+            return presupuestoEquipo;
+        }
+
+        // POST: api/catalogos/postPresupuestosEquipos
+        [HttpPost("PresupuestosEquipos")]
+        [Authorize]
+        public async Task<IActionResult> PostPresupuestoEquipo([FromBody] PresupuestoEquipo presupuestoEquipo)
+        {
+            if (presupuestoEquipo == null)
+            {
+                return BadRequest("El presupuesto de equipo no puede ser nulo.");
+            }
+
+            try
+            {
+                presupuestoEquipo.FechaCreacion = DateTime.UtcNow;
+                _context.PresupuestoEquipos.Add(presupuestoEquipo);
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = true,
+                    Data = CreatedAtAction(nameof(GetPresupuestoEquipo), new { id = presupuestoEquipo.Id }, presupuestoEquipo),
+                    Mensaje = "Presupuesto de equipo creado con éxito",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+        // PUT: api/catalogos/putPresupuestosEquipos/{id}
+        [HttpPut("PresupuestosEquipos/{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutPresupuestoEquipo(int id, [FromBody] PresupuestoEquipo presupuestoEquipo)
+        {
+            if (id != presupuestoEquipo.Id)
+            {
+                return BadRequest("El ID en la URL no coincide con el ID del cuerpo del objeto.");
+            }
+
+            presupuestoEquipo.FechaModificacion = DateTime.UtcNow;
+            _context.Entry(presupuestoEquipo).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = true,
+                    Data = presupuestoEquipo,
+                    Mensaje = "Presupuesto de equipo actualizado con éxito",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PresupuestoEquipoExists(id))
+                {
+                    return NotFound("Presupuesto de equipo no encontrado.");
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new RespuestaHttp
+                        {
+                            Exito = false,
+                            Data = new { ErrorMessage = "Error al actualizar el presupuesto de equipo." },
+                            Mensaje = "Ocurrió un error de concurrencia",
+                            MensajeInterno = ""
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp()
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error inesperado",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
+        private bool PresupuestoEquipoExists(int id)
+        {
+            return _context.PresupuestoEquipos.Any(e => e.Id == id);
+        }
+
+        // DELETE: api/catalogos/deletePresupuestosEquipos/{id}
+        [HttpDelete("PresupuestosEquipos/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeletePresupuestoEquipo(int id)
+        {
+            try
+            {
+                var presupuestoEquipo = await _context.PresupuestoEquipos.FindAsync(id);
+                if (presupuestoEquipo == null)
+                {
+                    return NotFound(new RespuestaHttp
+                    {
+                        Exito = false,
+                        Data = null,
+                        Mensaje = "Presupuesto de equipo no encontrado.",
+                        MensajeInterno = ""
+                    });
+                }
+
+                _context.PresupuestoEquipos.Remove(presupuestoEquipo);
+                await _context.SaveChangesAsync();
+
+                RespuestaHttp respuestaHttp = new RespuestaHttp
+                {
+                    Exito = true,
+                    Data = null,
+                    Mensaje = "Presupuesto de equipo eliminado con éxito.",
+                    MensajeInterno = ""
+                };
+
+                return Ok(respuestaHttp);
+            }
+            catch (Exception ex)
+            {
+                RespuestaHttp respuestaHttp = new RespuestaHttp
+                {
+                    Exito = false,
+                    Data = new { ErrorMessage = ex.Message, ErrorType = ex.GetType().Name },
+                    Mensaje = "Ocurrió un error al eliminar el presupuesto de equipo.",
+                    MensajeInterno = ex.InnerException?.Message
+                };
+
+                return StatusCode(StatusCodes.Status500InternalServerError, respuestaHttp);
+            }
+        }
+
     }
 }
